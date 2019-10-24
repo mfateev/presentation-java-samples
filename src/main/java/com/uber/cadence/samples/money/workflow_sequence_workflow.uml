@@ -1,0 +1,14 @@
+@startuml
+actor Starter
+participant Starter order 10
+participant "Workflow Worker" order 15
+participant "Cadence Frontend" order 20
+participant "Workflow State" order 30
+participant "Task List 'transfer'" order 40
+group atomic
+  "Workflow Worker" -> "Cadence Frontend" : Poll Task List "transfer"
+  "Cadence Frontend" -> "Task List 'transfer'": Poll Task List "transfer"
+  return "Decision Task"
+  "Cadence Frontend" -> "Workflow State": Start Decision Task
+end
+@enduml
