@@ -41,8 +41,10 @@ public class TransferRequester {
     // now we can start running instances of our saga - its state will be persisted
     AccountTransferWorkflow transferWorkflow =
         workflowClient.newWorkflowStub(AccountTransferWorkflow.class);
-    WorkflowClient.start(
-        transferWorkflow::transfer, "account1", "account2", reference, amountCents);
+    String from = "account1";
+    String to = "account2";
+    WorkflowClient.start(transferWorkflow::transfer, from, to, reference, amountCents);
+    System.out.printf("Transfer of %d cents from %s to %s requested", amountCents, from, to);
     System.exit(0);
   }
 }

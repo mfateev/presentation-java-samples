@@ -19,7 +19,6 @@ package com.uber.cadence.samples.money;
 
 import com.uber.cadence.activity.ActivityOptions;
 import com.uber.cadence.common.RetryOptions;
-import com.uber.cadence.workflow.CancellationScope;
 import com.uber.cadence.workflow.Workflow;
 import java.time.Duration;
 
@@ -39,15 +38,9 @@ public class AccountTransferWorkflowImpl implements AccountTransferWorkflow {
   private final Account account = Workflow.newActivityStub(Account.class, options);
 
   @Override
-  public void transfer(String fromAccountId,
-                       String toAccountId,
-                       String referenceId,
-                       int amountCents) {
-    CancellationScope mainScope = Workflow.newDetachedCancellationScope(() -> {
-      account.withdraw(fromAccountId, referenceId, amountCents);
-      account.deposit(toAccountId, referenceId, amountCents);
-    });
+  public void transfer(
+      String fromAccountId, String toAccountId, String referenceId, int amountCents) {
+    account.withdraw(fromAccountId, referenceId, amountCents);
+    account.deposit(toAccountId, referenceId, amountCents);
   }
-
-
 }

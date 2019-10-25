@@ -40,6 +40,6 @@ public class AccountImpl implements Account {
     System.out.printf(
         "Deposit to %s of %d cents requested. ReferenceId=%s\n",
         accountId, amountCents, referenceId);
-    throw new RuntimeException("simulated");
+    //    throw new RuntimeException("simulated");
   }
 }
