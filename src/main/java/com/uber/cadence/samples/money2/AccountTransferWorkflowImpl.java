@@ -15,19 +15,21 @@
  *  permissions and limitations under the License.
  */
 
-package com.uber.cadence.samples.money;
+package com.uber.cadence.samples.money2;
 
 import com.uber.cadence.activity.ActivityOptions;
 import com.uber.cadence.common.RetryOptions;
 import com.uber.cadence.workflow.Workflow;
 import java.time.Duration;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AccountTransferWorkflowImpl implements AccountTransferWorkflow {
 
   private final ActivityOptions options =
       new ActivityOptions.Builder()
           .setStartToCloseTimeout(Duration.ofSeconds(5))
-          .setScheduleToStartTimeout(Duration.ofMinutes(10))
+          .setScheduleToStartTimeout(Duration.ofHours(1))
           .setRetryOptions(
               new RetryOptions.Builder()
                   .setInitialInterval(Duration.ofSeconds(1))
@@ -37,10 +39,34 @@ public class AccountTransferWorkflowImpl implements AccountTransferWorkflow {
           .build();
   private final Account account = Workflow.newActivityStub(Account.class, options);
 
+  private Set<String> references = new HashSet<>();
+  private int balance;
+  private int count;
+
   @Override
-  public void transfer(
-      String fromAccountId, String toAccountId, String referenceId, int amountCents) {
+  public void deposit(String toAccount, int batchSize) {
+    Workflow.await(() -> count == batchSize);
+    String referenceId = Workflow.randomUUID().toString();
+    account.deposit(toAccount, referenceId, balance);
+  }
+
+  @Override
+  public void withdraw(String fromAccountId, String referenceId, int amountCents) {
+    if (!references.add(referenceId)) {
+      return; // duplicate
+    }
     account.withdraw(fromAccountId, referenceId, amountCents);
-    account.deposit(toAccountId, referenceId, amountCents);
+    balance += amountCents;
+    count++;
+  }
+
+  @Override
+  public int getBalance() {
+    return balance;
+  }
+
+  @Override
+  public int getCount() {
+    return count;
   }
 }

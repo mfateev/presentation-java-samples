@@ -15,26 +15,23 @@
  *  permissions and limitations under the License.
  */
 
-package com.uber.cadence.samples.money;
+package com.uber.cadence.samples.money2;
 
 import static com.uber.cadence.samples.common.SampleConstants.DOMAIN;
+import static com.uber.cadence.samples.money2.AccountActivityWorker.TASK_LIST;
 
 import com.uber.cadence.worker.Worker;
 
-public class AccountActivityWorker {
-
-  static final String TASK_LIST = "AcccountTransfer";
+public class AccountTransferWorker {
 
   @SuppressWarnings("CatchAndPrintStackTrace")
   public static void main(String[] args) {
     // Get worker to poll the common task list.
     Worker.Factory factory = new Worker.Factory(DOMAIN);
-    Worker worker = factory.newWorker(TASK_LIST);
-    Account account = new AccountImpl();
-    worker.registerActivitiesImplementations(account);
-
+    final Worker workerForCommonTaskList = factory.newWorker(TASK_LIST);
+    workerForCommonTaskList.registerWorkflowImplementationTypes(AccountTransferWorkflowImpl.class);
     // Start all workers created by this factory.
     factory.start();
-    System.out.println("Activity Worker started for task list: " + TASK_LIST);
+    System.out.println("Worker started for task list: " + TASK_LIST);
   }
 }

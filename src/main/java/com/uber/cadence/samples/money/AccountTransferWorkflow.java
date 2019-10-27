@@ -17,12 +17,10 @@
 
 package com.uber.cadence.samples.money;
 
-import static com.uber.cadence.samples.money.AccountTransferWorker.TASK_LIST;
-
 import com.uber.cadence.workflow.WorkflowMethod;
 
 public interface AccountTransferWorkflow {
 
-  @WorkflowMethod(executionStartToCloseTimeoutSeconds = 3600, taskList = TASK_LIST)
+  @WorkflowMethod
   void transfer(String fromAccountId, String toAccountId, String referenceId, int amountCents);
 }

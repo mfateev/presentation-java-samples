@@ -15,23 +15,10 @@
  *  permissions and limitations under the License.
  */
 
-package com.uber.cadence.samples.money;
+package com.uber.cadence.samples.money2;
 
-public class AccountImpl implements Account {
+public interface Account {
+  void deposit(String accountId, String referenceId, int amountCents);
 
-  @Override
-  public void withdraw(String accountId, String referenceId, int amountCents) {
-    System.out.printf(
-        "Withdraw to %s of %d cents requested. ReferenceId=%s\n",
-        accountId, amountCents, referenceId);
-    //    throw new RuntimeException("simulated");
-  }
-
-  @Override
-  public void deposit(String accountId, String referenceId, int amountCents) {
-    System.out.printf(
-        "Deposit to %s of %d cents requested. ReferenceId=%s\n",
-        accountId, amountCents, referenceId);
-    //    throw new RuntimeException("simulated");
-  }
+  void withdraw(String accountId, String referenceId, int amountCents);
 }

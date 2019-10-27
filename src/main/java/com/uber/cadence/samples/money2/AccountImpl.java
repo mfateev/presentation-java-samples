@@ -15,7 +15,7 @@
  *  permissions and limitations under the License.
  */
 
-package com.uber.cadence.samples.money;
+package com.uber.cadence.samples.money2;
 
 public class AccountImpl implements Account {
 

@@ -15,11 +15,13 @@
  *  permissions and limitations under the License.
  */
 
-package com.uber.cadence.samples.money;
+package com.uber.cadence.samples.money2;
 
 import static com.uber.cadence.samples.common.SampleConstants.DOMAIN;
-import static com.uber.cadence.samples.money.AccountTransferWorker.TASK_LIST;
+import static com.uber.cadence.samples.money2.AccountActivityWorker.TASK_LIST;
 
+import com.uber.cadence.WorkflowIdReusePolicy;
+import com.uber.cadence.client.BatchRequest;
 import com.uber.cadence.client.WorkflowClient;
 import com.uber.cadence.client.WorkflowOptions;
 import java.time.Duration;
@@ -28,30 +30,30 @@ import java.util.UUID;
 
 public class TransferRequester {
 
+  /** Number of withdrawals to batch */
+  public static final int BATCH_SIZE = 3;
+
   @SuppressWarnings("CatchAndPrintStackTrace")
   public static void main(String[] args) {
-    String reference;
-    int amountCents;
-    if (args.length == 0) {
-      reference = UUID.randomUUID().toString();
-      amountCents = new Random().nextInt(5000);
-    } else {
-      reference = args[0];
-      amountCents = Integer.parseInt(args[1]);
-    }
+    String reference = UUID.randomUUID().toString();
+    int amountCents = (new Random().nextInt(5) + 1) * 25;
     WorkflowClient workflowClient = WorkflowClient.newInstance(DOMAIN);
 
-    // now we can start running instances of our saga - its state will be persisted
+    String from = "account1";
+    String to = "account2";
     WorkflowOptions options =
         new WorkflowOptions.Builder()
             .setTaskList(TASK_LIST)
             .setExecutionStartToCloseTimeout(Duration.ofDays(365))
+            .setWorkflowId(to)
+            .setWorkflowIdReusePolicy(WorkflowIdReusePolicy.AllowDuplicate)
             .build();
     AccountTransferWorkflow transferWorkflow =
         workflowClient.newWorkflowStub(AccountTransferWorkflow.class, options);
-    String from = "account1";
-    String to = "account2";
-    WorkflowClient.start(transferWorkflow::transfer, from, to, reference, amountCents);
+    BatchRequest request = workflowClient.newSignalWithStartRequest();
+    request.add(transferWorkflow::deposit, to, BATCH_SIZE);
+    request.add(transferWorkflow::withdraw, from, reference, amountCents);
+    workflowClient.signalWithStart(request);
     System.out.printf("Transfer of %d cents from %s to %s requested", amountCents, from, to);
     System.exit(0);
   }

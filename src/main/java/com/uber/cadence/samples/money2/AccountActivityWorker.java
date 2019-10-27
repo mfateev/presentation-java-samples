@@ -15,7 +15,7 @@
  *  permissions and limitations under the License.
  */
 
-package com.uber.cadence.samples.money;
+package com.uber.cadence.samples.money2;
 
 import static com.uber.cadence.samples.common.SampleConstants.DOMAIN;
 
@@ -23,7 +23,7 @@ import com.uber.cadence.worker.Worker;
 
 public class AccountActivityWorker {
 
-  static final String TASK_LIST = "AcccountTransfer";
+  static final String TASK_LIST = "Account";
 
   @SuppressWarnings("CatchAndPrintStackTrace")
   public static void main(String[] args) {
