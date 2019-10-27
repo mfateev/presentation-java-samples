@@ -9,11 +9,11 @@ More Cadence info at:
 
 ## Overview of the Samples
 
-###Money Transfer Sample
+### Money Transfer Sample
 
 Demonstrates a simple transfer from one account to another. 
 
-###Money Batch Transfer Sample
+### Money Batch Transfer Sample
 
 A single deposit after multiple withdrawals. Demonstrates that workflow is stateful.
 
@@ -74,7 +74,7 @@ how to run each of the samples after you've built them using the preceding instr
 
 Don't forget to check unit tests found under src/test/java!
 
-###Money Transfer Sample
+### Money Transfer Sample
 
 Workflow Worker:
 ```
@@ -88,7 +88,7 @@ Initiate Transfer:
 ```
 ./gradlew -q execute -PmainClass=com.uber.cadence.samples.moneytransfer.TransferRequester
 ```
-###Money Batch Transfer Sample
+### Money Batch Transfer Sample
 Workflow Worker:
 ```
 ./gradlew -q execute -PmainClass=com.uber.cadence.samples.moneybatch.AccountTransferWorker
