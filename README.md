@@ -1,36 +1,28 @@
-# Java Cadence Samples
-These samples demonstrate various capabilities of Java Cadence client and server. You can learn more about Cadence at:
+# Java Cadence Samples for OSS Presentation
+This package contains two samples demoed at [Open Source Summit Europe (OSSEU)](https://osseu19.sched.com/event/TLDB/cadence-developer-oriented-workflow-platform-maxim-fateev-uber)
+
+More Cadence info at:
+
 * [Cadence Service](https://github.com/uber/cadence)
 * [Cadence Java Client](https://github.com/uber/cadence-java-client)
 * [Go Cadence Client](https://github.com/uber-go/cadence-client)
 
 ## Overview of the Samples
 
-* **HelloWorld Samples**
+###Money Transfer Sample
 
-    The following samples demonstrate:
+Demonstrates a simple transfer from one account to another. 
 
-  * **HelloActivity**: a single activity workflow
-  * **HelloActivityRetry**: how to retry an activity
-  * **HelloAsync**: how to call activities asynchronously and wait for them using Promises
-  * **HelloAsyncLambda**: how to run part of a workflow asynchronously in a separate task (thread)
-  * **HelloAsyncActivityCompletion**: an asynchronous activity implementation
-  * **HelloChild**: a child workflow
-  * **HelloException**: exception propagation and wrapping
-  * **HelloQuery**: a query
-  * **HelloSignal**: sending and handling a signal
-  * **HelloPeriodic**: a sample workflow that executes an activity periodically forever
+###Money Batch Transfer Sample
 
-* **FileProcessing** demonstrates task routing features. The sample workflow downloads a file, processes it, and uploads
-    the result to a destination. The first activity can be picked up by any worker. However, the second and third activities
-    must be executed on the same host as the first one.
+A single deposit after multiple withdrawals. Demonstrates that workflow is stateful.
 
 ## Get the Samples
 
 Run the following commands:
 
-      git clone https://github.com/uber/cadence-java-samples
-      cd cadence-java-samples
+      git clone https://github.com/mfateev/presentation-java-samples.git
+      cd presentation-java-samples
 
 ## Import into IntelliJ
 
@@ -82,41 +74,30 @@ how to run each of the samples after you've built them using the preceding instr
 
 Don't forget to check unit tests found under src/test/java!
 
-### Hello World
+###Money Transfer Sample
 
-To run the hello world samples:
-
-    ./gradlew -q execute -PmainClass=com.uber.cadence.samples.hello.HelloActivity
-    ./gradlew -q execute -PmainClass=com.uber.cadence.samples.hello.HelloActivityRetry
-    ./gradlew -q execute -PmainClass=com.uber.cadence.samples.hello.HelloAsync
-    ./gradlew -q execute -PmainClass=com.uber.cadence.samples.hello.HelloAsyncActivityCompletion
-    ./gradlew -q execute -PmainClass=com.uber.cadence.samples.hello.HelloAsyncLambda
-    ./gradlew -q execute -PmainClass=com.uber.cadence.samples.hello.HelloChild
-    ./gradlew -q execute -PmainClass=com.uber.cadence.samples.hello.HelloException
-    ./gradlew -q execute -PmainClass=com.uber.cadence.samples.hello.HelloPeriodic
-    ./gradlew -q execute -PmainClass=com.uber.cadence.samples.hello.HelloQuery
-    ./gradlew -q execute -PmainClass=com.uber.cadence.samples.hello.HelloSignal
-
-### File Processing
-
-This sample has two executables. Execute each command in a separate terminal window. The first command
-runs the worker that hosts the workflow and activities implementation. To demonstrate that activities
-execute together, we recommend that you run more than one instance of this worker.
-
-    ./gradlew -q execute -PmainClass=com.uber.cadence.samples.fileprocessing.FileProcessingWorker
-
-The second command starts workflows. Each invocation starts a new workflow execution.
-
-    ./gradlew -q execute -PmainClass=com.uber.cadence.samples.fileprocessing.FileProcessingStarter
-    
-### Trip Booking
-
-Cadence implementation of the [Camunda BPMN trip booking example](https://github.com/berndruecker/trip-booking-saga-java)
-
-Demonstrates Cadence approach to SAGA.
-
-To run:
-
-    ./gradlew -q execute -PmainClass=com.uber.cadence.samples.bookingsaga.TripBookingSaga
-
-
+Workflow Worker:
+```
+./gradlew -q execute -PmainClass=com.uber.cadence.samples.moneytransfer.AccountTransferWorker
+```
+Activities Worker:
+```
+./gradlew -q execute -PmainClass=com.uber.cadence.samples.moneytransfer.AccountActivityWorker
+```
+Initiate Transfer:
+```
+./gradlew -q execute -PmainClass=com.uber.cadence.samples.moneytransfer.TransferRequester
+```
+###Money Batch Transfer Sample
+Workflow Worker:
+```
+./gradlew -q execute -PmainClass=com.uber.cadence.samples.moneybatch.AccountTransferWorker
+```
+Activities Worker:
+```
+./gradlew -q execute -PmainClass=com.uber.cadence.samples.moneybatch.AccountActivityWorker
+```
+Initiate Transfer:
+```
+./gradlew -q execute -PmainClass=com.uber.cadence.samples.moneybatch.TransferRequester
+```

@@ -17,7 +17,7 @@ googleJavaFormat {
 group = 'com.uber'
 version = '0.0.1'
 
-description = """Samples for Cadence. Based on samples for AWS SWF"""
+description = """Samples for OSS Presentation."""
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
